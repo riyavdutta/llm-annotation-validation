@@ -1,27 +1,25 @@
 # 05_evaluate_part_a.R
-# Part A evaluation: compares the model's predictions with the reviewers' own
-# recommendation and rating.
+# Part A evaluation: compares each model's predictions with the reviewers' own
+# recommendation and rating. Evaluates every outputs/part_a_predictions_*.csv.
 # Primary metrics (fixed before looking at results):
 #   recommendation: Cohen's kappa
 #   rating:         quadratic-weighted kappa
 # Secondary: accuracy vs. majority baseline, per-class precision/recall,
 # exact and within-one-star agreement, mean absolute error, Spearman's rho.
 # 95% CIs by percentile bootstrap (2,000 resamples).
-# Writes outputs/part_a_metrics.csv and two confusion matrices. No review text.
+# Writes outputs/part_a_metrics.csv (all models) and two confusion matrices
+# per model. No review text.
 # Run from the repository root: Rscript scripts/05_evaluate_part_a.R
 
 library(readr)
 
-pred_path   <- file.path("outputs", "part_a_predictions.csv")
 sample_path <- file.path("data", "private", "main_sample.csv")
 n_boot      <- 2000
 
-predictions <- read_csv(pred_path, show_col_types = FALSE)
-truth <- read_csv(sample_path, show_col_types = FALSE)[c("review_id", "rating", "recommended")]
+pred_files <- list.files("outputs", pattern = "^part_a_predictions_.*\\.csv$", full.names = TRUE)
+if (length(pred_files) == 0) stop("No Part A prediction files found in outputs/.")
 
-d <- merge(truth, predictions[c("review_id", "pred_recommend", "pred_rating")], by = "review_id")
-d <- d[!is.na(d$pred_recommend) & !is.na(d$pred_rating), ]
-cat("Reviews evaluated:", nrow(d), "\n")
+truth <- read_csv(sample_path, show_col_types = FALSE)[c("review_id", "rating", "recommended")]
 
 # Agreement statistics ---------------------------------------------------------
 # Cohen's kappa; with weights = "quadratic", disagreements are penalised by the
@@ -54,36 +52,51 @@ compute_metrics <- function(d) {
   )
 }
 
-estimates <- compute_metrics(d)
+evaluate_model <- function(pred_file) {
+  predictions <- read_csv(pred_file, show_col_types = FALSE)
+  model <- predictions$model[1]
+  slug <- sub("^part_a_predictions_(.*)\\.csv$", "\\1", basename(pred_file))
 
-set.seed(2026)
-boot <- replicate(n_boot, compute_metrics(d[sample(nrow(d), replace = TRUE), ]))
-ci <- apply(boot, 1, quantile, probs = c(0.025, 0.975), na.rm = TRUE)
+  d <- merge(truth, predictions[c("review_id", "pred_recommend", "pred_rating")], by = "review_id")
+  d <- d[!is.na(d$pred_recommend) & !is.na(d$pred_rating), ]
 
-metrics <- data.frame(
-  metric   = names(estimates),
-  estimate = round(estimates, 3),
-  ci_low   = round(ci[1, ], 3),
-  ci_high  = round(ci[2, ], 3)
-)
-metrics[metrics$metric == "rec_majority_base", c("ci_low", "ci_high")] <- NA
+  cat("\n==================== ", model, " ====================\n", sep = "")
+  cat("Reviews evaluated:", nrow(d), "\n")
 
-cat("\n== Metrics (95% bootstrap CI) ==\n")
-print(metrics, row.names = FALSE)
+  estimates <- compute_metrics(d)
+  set.seed(2026)
+  boot <- replicate(n_boot, compute_metrics(d[sample(nrow(d), replace = TRUE), ]))
+  ci <- apply(boot, 1, quantile, probs = c(0.025, 0.975), na.rm = TRUE)
 
-# Confusion matrices: rows = reviewer, columns = model -------------------------
-conf_rec <- table(reviewer = factor(d$recommended, 0:1), model = factor(d$pred_recommend, 0:1))
-conf_rating <- table(reviewer = factor(d$rating, 1:5), model = factor(d$pred_rating, 1:5))
+  metrics <- data.frame(
+    model    = model,
+    metric   = names(estimates),
+    estimate = round(estimates, 3),
+    ci_low   = round(ci[1, ], 3),
+    ci_high  = round(ci[2, ], 3)
+  )
+  metrics[metrics$metric == "rec_majority_base", c("ci_low", "ci_high")] <- NA
+  print(metrics[-1], row.names = FALSE)
 
-cat("\n== Recommendation (rows = reviewer, cols = model; 0 = no, 1 = yes) ==\n")
-print(conf_rec)
-cat("\n== Rating (rows = reviewer, cols = model) ==\n")
-print(conf_rating)
+  # Confusion matrices: rows = reviewer, columns = model
+  conf_rec <- table(reviewer = factor(d$recommended, 0:1), model = factor(d$pred_recommend, 0:1))
+  conf_rating <- table(reviewer = factor(d$rating, 1:5), model = factor(d$pred_rating, 1:5))
 
-cat("\n== Mean predicted rating by true rating ==\n")
-print(round(tapply(d$pred_rating, d$rating, mean), 2))
+  cat("\nRecommendation (rows = reviewer, cols = model; 0 = no, 1 = yes):\n")
+  print(conf_rec)
+  cat("\nRating (rows = reviewer, cols = model):\n")
+  print(conf_rating)
+  cat("\nMean predicted rating by true rating:\n")
+  print(round(tapply(d$pred_rating, d$rating, mean), 2))
 
-write_csv(metrics, file.path("outputs", "part_a_metrics.csv"), na = "")
-write_csv(as.data.frame(conf_rec), file.path("outputs", "part_a_confusion_recommend.csv"))
-write_csv(as.data.frame(conf_rating), file.path("outputs", "part_a_confusion_rating.csv"))
-cat("\nWrote outputs/part_a_metrics.csv and two confusion-matrix files.\n")
+  write_csv(as.data.frame(conf_rec),
+            file.path("outputs", paste0("part_a_confusion_recommend_", slug, ".csv")))
+  write_csv(as.data.frame(conf_rating),
+            file.path("outputs", paste0("part_a_confusion_rating_", slug, ".csv")))
+  metrics
+}
+
+all_metrics <- do.call(rbind, lapply(pred_files, evaluate_model))
+write_csv(all_metrics, file.path("outputs", "part_a_metrics.csv"), na = "")
+cat("\nWrote outputs/part_a_metrics.csv and confusion matrices for",
+    length(pred_files), "model(s).\n")

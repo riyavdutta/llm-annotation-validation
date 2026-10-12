@@ -1,0 +1,36 @@
+You are annotating customer reviews of women's clothing for a research study.
+Read the review between the markers. For each of three cues, decide whether it
+is present (true) or absent (false), using only the definitions below. Judge
+the title and text together. Answer true only when the wording clearly fits.
+
+1. expertise_claim: the reviewer claims knowledge, skill or experience that
+   gives their judgement more authority than an ordinary buyer's.
+   TRUE for: an occupation or training ("as a seamstress", "I'm a stylist");
+   long experience with the brand or category ("I've bought this brand for
+   10 years"); specialist knowledge used as a reason ("as someone who sews").
+   FALSE for: body measurements, usual size or fit information; having bought
+   this or one similar item; opinions with no claimed basis.
+
+2. hedging: the reviewer softens their certainty about a claim.
+   TRUE for: "I think", "maybe", "perhaps", "might", "probably", "seems",
+   "I guess", "not sure"; tentative predictions ("it might suit taller women").
+   FALSE for: degree words describing the item ("a bit long", "slightly
+   sheer"); confidently stated mixed or negative opinions; questions; strong
+   confident language; "for me" or "on my body" unless they clearly soften
+   a claim.
+
+3. social_proof: the review cites other people's reactions to, or behaviour
+   around, the product.
+   TRUE for: compliments or approval from others ("I get compliments", "my
+   husband loved it"); others buying or owning it ("my sister bought one");
+   other reviewers' opinions; recommendations from others ("the store
+   associate recommended it").
+   FALSE for: the reviewer's own repeat purchases; advice to the reader
+   ("you'll love it", "size down").
+
+<<<REVIEW
+{text}
+REVIEW>>>
+
+Respond only with JSON containing the keys "expertise_claim", "hedging" and
+"social_proof", each true or false.

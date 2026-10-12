@@ -6,6 +6,9 @@ library(httr2)
 
 ollama_url <- "http://127.0.0.1:11434"
 
+# File-name-safe version of a model name, e.g. "llama3.2:3b" -> "llama3.2-3b".
+model_slug <- function(model) gsub("[^A-Za-z0-9.]+", "-", model)
+
 # Reads a prompt template and returns a function that inserts a review's text
 # at the {text} placeholder.
 load_prompt <- function(path) {

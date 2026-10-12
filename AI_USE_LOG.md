@@ -240,3 +240,72 @@ full Part A run before Part B, with the v0 prompt used unchanged.
 
 The prompt was not changed after seeing results. No Part B work, no commit
 or push.
+
+---
+
+## Session 6 — 2026-10-13
+
+**Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
+**Task given by author:** Add a second local model, prepare Part B, run Part A
+on the second model. Full Part B run deferred until the author approves the
+codebook.
+
+### Second model (author approved the download)
+
+- `gemma3:4b`, Ollama ID `68ceab7e468a`, 3.4 GB (incl. an 851 MB vision
+  component that is not used), from the official Ollama library; digest
+  verified by Ollama. The first download stalled at 6% and was restarted;
+  Ollama resumed it.
+
+### What the AI did
+
+- Wrote `codebook/codebook_v0.md`: the v0 cue definitions drafted in session 3,
+  with sources. Three open decisions set to the AI's suggested defaults, to be
+  confirmed by the author: D1 body measurements/fit are not expertise; D2
+  "for me"/"on my body" are not hedging unless they clearly soften a claim;
+  D3 compliments from people the reviewer knows count as social proof.
+- Wrote `prompts/part_b_v0.txt` from the codebook (true/false per cue).
+- `scripts/04_run_part_a.R` now takes the model as an argument and writes
+  `outputs/part_a_predictions_<model>.csv`. The existing llama file was
+  renamed accordingly (content unchanged). Added `model_slug()` to
+  `scripts/ollama_helpers.R`.
+- `scripts/05_evaluate_part_a.R` now evaluates every model and writes one
+  combined `outputs/part_a_metrics.csv` plus per-model confusion matrices.
+  Re-scoring llama gave identical numbers to session 5.
+- Wrote `scripts/06_run_part_b.R` (with `--test` mode), and, before any Part B
+  results existed, `scripts/07_evaluate_part_b.R` (cue prevalence; agreement
+  between the two models: kappa primary, plus percent agreement and Gwet's
+  AC1) and `scripts/08_predict_helpfulness.R` (negative binomial regression of
+  `positive_feedback` on the cues, controlling for log word count and rating).
+- Dry-ran scripts 07 and 08 on random fake codings in a scratch folder (not in
+  the repository). This showed AC1 = 0.87 for random coding of a 5%-prevalence
+  cue, so kappa was made the primary agreement measure.
+- Ran Part A on `gemma3:4b` with the unchanged prompt: 500 reviews, 15.5 min,
+  0 failed calls. The Mac used most of its swap during the run (8 GB RAM).
+- Part B test, 5 reviews, both models: pipeline works; both models gave
+  identical codings on these 5.
+
+### Part A results, both models (n = 500, 95% bootstrap CI)
+
+| Metric | llama3.2:3b | gemma3:4b |
+|--------|-------------|-----------|
+| Recommendation kappa (primary) | 0.458 (0.387–0.530) | 0.728 (0.649–0.802) |
+| Recommendation accuracy (baseline 0.830) | 0.764 | 0.916 |
+| Rating quadratic-weighted kappa (primary) | 0.752 (0.708–0.790) | 0.669 (0.622–0.713) |
+| Rating exact | 0.560 | 0.422 |
+| Rating within one star | 0.938 | 0.926 |
+| Spearman's rho | 0.790 | 0.766 |
+
+- Neither model is better on both tasks. Gemma is much better at
+  recommendation (above the majority baseline); llama is better at ratings.
+- Both under-predict ratings. Gemma rated 163 of 290 five-star reviews as 4.
+- Model comparison is descriptive: the CIs are per model, not a paired test
+  of the difference, which was not pre-specified.
+
+### Not done
+
+No full Part B run (awaiting codebook approval). No prompt changed after
+seeing results. No commit or push.
+- The codebook was first saved as `docs/codebook_v0.md`, but `.gitignore`
+  line 43 (`docs/`, from the R template) ignores that folder. Moved to
+  `codebook/codebook_v0.md`; `.gitignore` unchanged.

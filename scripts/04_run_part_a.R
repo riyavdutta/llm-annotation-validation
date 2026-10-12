@@ -1,17 +1,19 @@
 # 04_run_part_a.R
 # Part A: asks the local model, from the review text only, whether each reviewer
 # recommends the item and which rating they gave. Runs all 500 sampled reviews.
-# Writes outputs/part_a_predictions.csv (predictions only, no review text).
+# Writes outputs/part_a_predictions_<model>.csv (predictions only, no review text).
 # The true rating and recommendation are never sent to the model.
-# Run from the repository root: Rscript scripts/04_run_part_a.R
+# Run from the repository root: Rscript scripts/04_run_part_a.R [model]
+# (default model: llama3.2:3b)
 
 library(readr)
 source(file.path("scripts", "ollama_helpers.R"))
 
-model       <- "llama3.2:3b"
+args        <- commandArgs(trailingOnly = TRUE)
+model       <- if (length(args) >= 1) args[1] else "llama3.2:3b"
 prompt_path <- file.path("prompts", "part_a_v0.txt")
 sample_path <- file.path("data", "private", "main_sample.csv")
-out_path    <- file.path("outputs", "part_a_predictions.csv")
+out_path    <- file.path("outputs", paste0("part_a_predictions_", model_slug(model), ".csv"))
 
 model_options <- list(temperature = 0, seed = 42)
 
