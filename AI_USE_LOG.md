@@ -144,3 +144,50 @@ draft a codebook, call any API, or commit or push.
 
 No review text was sent to the model. No sampling for the new design, no
 prompts, no labels, no code in the repository changed. No commit or push.
+
+---
+
+## Session 4 — 2026-10-13
+
+**Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
+**Task given by author:** Draw the main sample and test the local LLM on 5 reviews.
+
+### What the AI did
+
+- Wrote and ran `scripts/02_draw_sample.R`: simple random sample of 500 reviews
+  with `set.seed(2026)`, from the 22,612 reviews that have a title or text and
+  are not among the 30 pilot reviews. Same `review_id` and title + text join
+  as `01_make_pilot_sheet.R`.
+  - `data/private/main_sample.csv` (git-ignored): `review_id`, `text`,
+    `rating`, `recommended`, `positive_feedback`, `word_count`.
+  - `data/processed/main_ids.csv`: `review_id` only.
+- Wrote `prompts/part_a_v0.txt`: asks the model, from the review text only,
+  whether the reviewer recommends the item and which rating (1–5) they gave.
+- Wrote and ran `scripts/03_test_llm.R` (readr + httr2): sends the first 5
+  sampled reviews to `llama3.2:3b` via the local Ollama server. Only the text
+  is sent. The reply is constrained to JSON. `temperature = 0`, `seed = 42`.
+  Prints predictions and timing only, writes no files.
+
+### Results
+
+- Sample: 500 unique reviews, 0 overlap with the pilot. Ratings 1–5 (%):
+  2.0 / 6.4 / 12.0 / 21.6 / 58.0 (full file: 3.6 / 6.7 / 12.2 / 21.6 / 55.9).
+  Recommended: 83.0% (full file: 82.2%). Positive feedback = 0: 46.2%.
+  Words: min 5, median 62, max 112.
+- Test (5 reviews): recommendation correct 3/5, rating exact 4/5, rating
+  within one star 5/5. About 0.9 s per review after the model loaded
+  (est. ~7 minutes for 500). Far too few to judge accuracy; this only shows
+  the pipeline works.
+- A second identical run gave identical predictions (deterministic setup).
+
+### Notes for the design
+
+- Only 10 one-star reviews in the sample; rating accuracy for 1 star will be
+  imprecise.
+- Because identical settings give identical output, repeating a run cannot
+  measure reliability. Part B reliability needs variation, e.g. reworded
+  prompts or different seeds.
+
+### Not done
+
+No full run, no trust-cue prompt, no commit or push.
