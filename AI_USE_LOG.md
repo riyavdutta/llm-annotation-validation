@@ -191,3 +191,52 @@ prompts, no labels, no code in the repository changed. No commit or push.
 ### Not done
 
 No full run, no trust-cue prompt, no commit or push.
+
+---
+
+## Session 5 — 2026-10-13
+
+**Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
+**Task given by author:** Next step at the AI's suggestion. The AI proposed the
+full Part A run before Part B, with the v0 prompt used unchanged.
+
+### What the AI did
+
+- Wrote `scripts/ollama_helpers.R`: shared functions to load a prompt, record
+  the Ollama version and model digest, and call the model.
+- Wrote and ran `scripts/04_run_part_a.R`: all 500 sampled reviews, text only,
+  `llama3.2:3b` (digest `a80c4f17acd5`), Ollama 0.34.4, `prompts/part_a_v0.txt`
+  (md5 `c2ecd5d097f1a429efa6978f1b68cda0`), `temperature = 0`, `seed = 42`.
+  7.2 minutes, 0 failed calls. Output: `outputs/part_a_predictions.csv`
+  (predictions and run settings only, no review text).
+- Wrote and ran `scripts/05_evaluate_part_a.R`. Primary metrics were fixed in
+  the script before results were seen: Cohen's kappa (recommendation) and
+  quadratic-weighted kappa (rating). 95% CIs: percentile bootstrap, 2,000
+  resamples, `set.seed(2026)`. Kappa computed in base R (no new packages).
+- Checked: the 5 reviews from the session 4 test got identical predictions.
+
+### Results (n = 500)
+
+| Metric | Estimate | 95% CI |
+|--------|----------|--------|
+| Recommendation, Cohen's kappa | 0.458 | 0.387–0.530 |
+| Recommendation, accuracy | 0.764 | 0.726–0.800 |
+| (Majority baseline: always "recommend") | 0.830 | — |
+| Recall, "not recommended" | 0.988 | 0.961–1.000 |
+| Precision, "not recommended" | 0.418 | 0.352–0.485 |
+| Rating, quadratic-weighted kappa | 0.752 | 0.708–0.790 |
+| Rating, exact | 0.560 | 0.516–0.602 |
+| Rating, within one star | 0.938 | 0.916–0.958 |
+| Rating, mean absolute error | 0.510 | 0.456–0.566 |
+| Rating, Spearman's rho | 0.790 | 0.749–0.827 |
+
+- The model is systematically too negative. It labelled 117 of 415
+  recommending reviewers as "not recommending" and under-predicts ratings at
+  every level (mean prediction for true 4 = 3.50, true 3 = 2.37).
+- It orders reviews well (rho 0.79, QWK 0.75) but is miscalibrated.
+  Recommendation accuracy is below the majority baseline.
+
+### Not done
+
+The prompt was not changed after seeing results. No Part B work, no commit
+or push.
