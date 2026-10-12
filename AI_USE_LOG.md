@@ -99,3 +99,48 @@ draft a codebook, call any API, or commit or push.
 ### Notes
 
 - `CLAUDE.md` still does not exist in the repository.
+
+---
+
+## Session 3 — 2026-10-12
+
+**Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
+**Task given by author:** Help with labelling; then change the design; then install a free local LLM.
+
+### Discussion and decisions
+
+- The author shared a screenshot of the first two pilot-sheet rows. The AI
+  explained how to approach labelling but did not label them.
+- At the author's request, the AI drafted initial (v0) definitions for
+  `expertise_claim`, `hedging` and `social_proof` in chat. Not yet saved to
+  the repository.
+- The author decided not to hand-label reviews. New proposed design, with no
+  manual coding:
+  - **Part A:** validate the LLM against labels the reviewers gave themselves
+    (`Recommended IND`, `Rating`).
+  - **Part B:** LLM codes the three trust cues; check reliability across
+    repeated runs and whether the cues predict `Positive Feedback Count`.
+  - The pilot sheet (`data/private/pilot_sheet.csv`) is no longer used.
+- The author ruled out paid APIs. Decision: run an open model locally.
+
+### Local LLM installation (author approved the download)
+
+| Item | Value |
+|------|-------|
+| Ollama version | v0.34.4 (CLI build `ollama-darwin.tgz`, 160 MB), from `github.com/ollama/ollama/releases` |
+| Why this version | Latest release ≥ 2 weeks old at the end of its patch line; newer v0.40.x was 0–16 days old |
+| Download SHA-256 | `e9c8fddaab5f48f47f2c4ae3d23d0732f5182417125353faeed2188e34a22799` (matches the official `sha256sum.txt`) |
+| Signature | Valid Apple Developer ID: Infra Technologies, Inc (3MU9H2V9Y9) |
+| Installed to | `~/.local/ollama/` (user folder, outside the repository, no admin rights) |
+| Server | `127.0.0.1:11434` (this machine only) |
+| Model | `llama3.2:3b`, Ollama ID `a80c4f17acd5`, 2.0 GB, stored in `~/.ollama/models/` |
+| Hardware | Apple M2, 8 GB RAM |
+
+- Smoke test with two invented sentences (no review data), `temperature = 0`,
+  `seed = 42`: both answers correct; ~17 s for the first call (model load),
+  ~0.2 s once loaded.
+
+### Not done
+
+No review text was sent to the model. No sampling for the new design, no
+prompts, no labels, no code in the repository changed. No commit or push.

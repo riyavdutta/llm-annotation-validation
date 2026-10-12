@@ -1,0 +1,12 @@
+You are annotating customer reviews of women's clothing for a research study.
+Read the review between the markers and answer based only on its text.
+
+<<<REVIEW
+{text}
+REVIEW>>>
+
+Answer two questions:
+1. recommend: Would this reviewer recommend the item to other shoppers? Answer true or false.
+2. rating: What star rating from 1 (worst) to 5 (best) did the reviewer most likely give?
+
+Respond only with JSON containing the keys "recommend" and "rating".
