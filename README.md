@@ -33,11 +33,11 @@ are used in research.
 
 ## Data
 
-*Women's E-Commerce Clothing Reviews* (Kaggle): 23,486 reviews with title,
-text, star rating (1–5), whether the reviewer recommends the item, and how
-many other shoppers marked the review as helpful. The raw file is not
-included in this repository; download it from Kaggle and place it in
-`data/raw/` (see *Reproduce*).
+[*Women's E-Commerce Clothing Reviews*](https://www.kaggle.com/datasets/nicapotato/womens-ecommerce-clothing-reviews)
+(Kaggle): 23,486 reviews with title, text, star rating (1–5), whether the
+reviewer recommends the item, and how many other shoppers marked the review
+as helpful. The raw file is not included in this repository; download it from
+Kaggle and place it in `data/raw/` (see *Reproduce*).
 
 - Reviews with neither title nor text were dropped (844), leaving 22,642.
 - 30 reviews were set aside for an early pilot and excluded.
