@@ -1,0 +1,10 @@
+cue,prevalence_a,prevalence_b,both_present,metric,estimate,ci_low,ci_high,model_a,model_b
+expertise_claim,0.012,0,0,agreement,0.988,0.978,0.996,gemma3:4b,llama3.2:3b
+expertise_claim,0.012,0,0,kappa,0,0,0,gemma3:4b,llama3.2:3b
+expertise_claim,0.012,0,0,ac1,0.988,0.978,0.996,gemma3:4b,llama3.2:3b
+hedging,0.266,0.126,41,agreement,0.772,0.736,0.806,gemma3:4b,llama3.2:3b
+hedging,0.266,0.126,41,kappa,0.298,0.203,0.392,gemma3:4b,llama3.2:3b
+hedging,0.266,0.126,41,ac1,0.667,0.602,0.725,gemma3:4b,llama3.2:3b
+social_proof,0.102,0.014,7,agreement,0.912,0.886,0.936,gemma3:4b,llama3.2:3b
+social_proof,0.102,0.014,7,kappa,0.222,0.08,0.356,gemma3:4b,llama3.2:3b
+social_proof,0.102,0.014,7,ac1,0.901,0.869,0.93,gemma3:4b,llama3.2:3b

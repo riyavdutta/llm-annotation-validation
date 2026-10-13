@@ -29,8 +29,19 @@ fit_model <- function(pred_file) {
   d <- merge(main_sample, predictions[c("review_id", cues)], by = "review_id")
   d <- d[complete.cases(d), ]
 
-  fit <- glm.nb(positive_feedback ~ expertise_claim + hedging + social_proof +
-                  log(word_count) + factor(rating), data = d)
+  # Deviation from plan (session 7): a cue this model never (or always) codes
+  # has no variation and cannot be estimated, so it is left out of this
+  # model's regression and reported.
+  usable <- cues[sapply(cues, function(cue) length(unique(d[[cue]])) > 1)]
+  dropped <- setdiff(cues, usable)
+  if (length(dropped) > 0) {
+    cat("\nNote (", model, "): no variation in ", paste(dropped, collapse = ", "),
+        "; left out of the regression.\n", sep = "")
+  }
+
+  formula <- reformulate(c(usable, "log(word_count)", "factor(rating)"),
+                         response = "positive_feedback")
+  fit <- glm.nb(formula, data = d)
 
   est <- coef(summary(fit))
   ci  <- confint.default(fit)
@@ -42,7 +53,8 @@ fit_model <- function(pred_file) {
     ci_high = round(exp(ci[, 2]), 3),
     p_value = signif(est[, "Pr(>|z|)"], 3),
     n       = nrow(d),
-    theta   = round(fit$theta, 3)
+    theta   = round(fit$theta, 3),
+    dropped_cues = if (length(dropped) > 0) paste(dropped, collapse = ";") else ""
   )
 
   cat("\n==================== ", model, " ====================\n", sep = "")

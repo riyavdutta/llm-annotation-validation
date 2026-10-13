@@ -309,3 +309,65 @@ seeing results. No commit or push.
 - The codebook was first saved as `docs/codebook_v0.md`, but `.gitignore`
   line 43 (`docs/`, from the R template) ignores that folder. Moved to
   `codebook/codebook_v0.md`; `.gitignore` unchanged.
+
+---
+
+## Session 7 — 2026-10-13
+
+**Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
+**Task given by author:** "Let us proceed to the next part." Given in reply to
+the request to approve codebook decisions D1–D3; the AI treated it as
+approval of v0 as written.
+
+### What the AI did
+
+- Froze the codebook as `codebook/codebook_v1.md`: definitions identical to
+  v0 (checked with `diff`), status and provenance updated. v0 kept.
+- Ran `scripts/06_run_part_b.R` on all 500 reviews with both models,
+  `prompts/part_b_v0.txt` (md5 `716c49f57ce6dd0a3336ce887ef077f9`),
+  `temperature = 0`, `seed = 42`.
+  - `llama3.2:3b`: 9.7 min, 0 failed calls.
+  - `gemma3:4b`: 63.5 min, 3 failed calls (timeouts with no reply; the Mac was
+    short of memory). Successful calls: median 3.9 s, max 10.5 s.
+- Added a `--retry-failed` option to `06_run_part_b.R` (same prompt, model
+  digest and settings, checked by the script) and re-ran the 3 failed reviews:
+  all succeeded within seconds. The other 497 rows were verified unchanged
+  against a backup copy.
+- **Deviation from plan:** `llama3.2:3b` coded `expertise_claim` as absent in
+  all 500 reviews, so it cannot enter a regression. `scripts/08_predict_helpfulness.R`
+  now leaves out a cue with no variation for that model and reports it
+  (column `dropped_cues`). Tested on fake data before use.
+- Ran `scripts/07_evaluate_part_b.R` and `scripts/08_predict_helpfulness.R`.
+
+### Results: cue prevalence and agreement between models (n = 500)
+
+| Cue | gemma3:4b | llama3.2:3b | Both | Kappa (95% CI) | AC1 |
+|-----|-----------|-------------|------|----------------|-----|
+| expertise_claim | 1.2% (6) | 0.0% (0) | 0 | 0.00 | 0.99 |
+| hedging | 26.6% | 12.6% | 41 | 0.30 (0.20–0.39) | 0.67 |
+| social_proof | 10.2% | 1.4% (7) | 7 | 0.22 (0.08–0.36) | 0.90 |
+
+- Agreement between the models is poor to fair on every cue. Gemma codes
+  hedging twice as often and social proof seven times as often as llama; all
+  7 of llama's social-proof reviews were also coded by gemma.
+- AC1 is high only because the cues are rare (as the dry run predicted), so
+  kappa is the measure reported.
+
+### Results: do cues predict helpful votes? (negative binomial, IRR, 95% CI)
+
+| Term | gemma3:4b | llama3.2:3b |
+|------|-----------|-------------|
+| expertise_claim | 1.46 (0.36–5.83), 6 cases | not estimable (0 cases) |
+| hedging | 0.84 (0.58–1.22) | 0.86 (0.52–1.41) |
+| social_proof | 0.55 (0.33–0.94), p = 0.03 | 0.29 (0.07–1.30), p = 0.11 |
+| log(word_count) | 1.54 (1.15–2.08) | 1.50 (1.13–1.99) |
+
+- Only review length predicts helpful votes consistently.
+- Social proof is linked to fewer votes with gemma's coding (p = 0.03) but not
+  significantly with llama's. With 6 cue tests, p = 0.03 does not survive a
+  Bonferroni correction (0.05 / 6 = 0.008).
+- Without human labels it cannot be said which model's coding is correct.
+
+### Not done
+
+No prompt or codebook changed after seeing results. No commit or push.
