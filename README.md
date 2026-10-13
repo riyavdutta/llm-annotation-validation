@@ -59,7 +59,7 @@ Kaggle and place it in `data/raw/` (see *Reproduce*).
   after results were seen.
 - **Codebook:** [`codebook/codebook_v1.md`](codebook/codebook_v1.md), based on
   source credibility (Hovland et al., 1953; Ohanian, 1990), hedging (Lakoff,
-  1972; Hyland, 1998) and social proof (Cialdini). Frozen before the Part B run.
+  1972; Hyland, 1998) and social proof (Cialdini). The definitions are identical to codebook_v0.md, which was committed before the Part B run, and reached the models through the Part B prompt.
 - **Pre-specification:** metrics and models were written into the evaluation
   scripts before results existed. One deviation is documented: a cue that a
   model never codes is left out of that model's regression.
