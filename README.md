@@ -12,14 +12,10 @@ an 8 GB laptop, at no cost, in R.
    task.** Agreement with reviewers' own labels ranged from kappa 0.46 to 0.75.
    Neither model was better at both tasks: gemma3:4b was clearly better at
    predicting recommendations, llama3.2:3b slightly better at star ratings.
-2. **Both models squeeze ratings towards the middle.** Predictions are too low
-   for 3–5-star reviews (80% of the sample), so the models read reviews as
-   more negative than their authors meant them.
+2. **Both models under-rated reviews on average.** The mean predicted minus actual rating was -0.43 (llama3.2:3b) and -0.61 (gemma3:4b). The shift was downward for 3 to 5 star reviews (91.6% of the sample), near zero or slightly low for 2 star reviews, and upward only for the 10 one-star reviews, too few to interpret. The models therefore read most reviews as more negative than their authors meant.
 3. **On subtler concepts the models disagree.** Given the same codebook and
    prompt, the two models agreed only weakly on trust cues (kappa 0.00–0.30),
-   and one coded social proof seven times as often as the other. Whether
-   social proof appears to predict helpfulness votes depends on which model
-   did the coding.
+   and one coded social proof seven times as often as the other. Social proof was associated with fewer helpfulness votes under both models' coding (IRR 0.55 and 0.29), but the confidence intervals overlap widely, the llama3.2:3b estimate rests on only 7 coded reviews, and only the gemma3:4b estimate reaches p < 0.05, which does not survive correction for six tests.
 
 The practical lesson: LLM annotations should be validated for each task and
 each concept, and substantive conclusions checked across models, before they
@@ -113,9 +109,7 @@ with 95% CIs; IRR > 1 means more votes when the cue is present.
 | Social proof | 0.55 (0.33–0.94), p = 0.03 | 0.29 (0.07–1.30), p = 0.11 |
 | Log word count | 1.54 (1.15–2.08) | 1.50 (1.13–1.99) |
 
-Only review length predicts votes consistently. The social-proof result
-appears with one model's coding only and would not survive a correction for
-six cue tests (Bonferroni threshold 0.008).
+Only review length predicts votes consistently. The social-proof estimate reaches p < 0.05 under one model's coding only, and would not survive a correction for six cue tests (Bonferroni threshold 0.008). The two estimates point the same way and their intervals overlap.
 
 ## Limitations
 

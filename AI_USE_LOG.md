@@ -7,7 +7,7 @@ author, not the AI.
 
 ---
 
-## Session 1 — 2026-10-12
+## Session 1: 2026-10-12
 
 **Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
 **Task given by author:** Step 1 only: project setup and read-only data inspection.
@@ -53,7 +53,7 @@ No sampling, no API calls, no codebook, no labels, no git commit or push.
 
 ---
 
-## Session 2 — 2026-10-12
+## Session 2: 2026-10-12
 
 **Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
 **Task given by author:** Create the pilot labelling sheet only.
@@ -102,7 +102,7 @@ draft a codebook, call any API, or commit or push.
 
 ---
 
-## Session 3 — 2026-10-12
+## Session 3: 2026-10-12
 
 **Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
 **Task given by author:** Help with labelling; then change the design; then install a free local LLM.
@@ -147,7 +147,7 @@ prompts, no labels, no code in the repository changed. No commit or push.
 
 ---
 
-## Session 4 — 2026-10-13
+## Session 4: 2026-10-13
 
 **Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
 **Task given by author:** Draw the main sample and test the local LLM on 5 reviews.
@@ -194,7 +194,7 @@ No full run, no trust-cue prompt, no commit or push.
 
 ---
 
-## Session 5 — 2026-10-13
+## Session 5: 2026-10-13
 
 **Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
 **Task given by author:** Next step at the AI's suggestion. The AI proposed the
@@ -221,7 +221,7 @@ full Part A run before Part B, with the v0 prompt used unchanged.
 |--------|----------|--------|
 | Recommendation, Cohen's kappa | 0.458 | 0.387–0.530 |
 | Recommendation, accuracy | 0.764 | 0.726–0.800 |
-| (Majority baseline: always "recommend") | 0.830 | — |
+| (Majority baseline: always "recommend") | 0.830 | n/a |
 | Recall, "not recommended" | 0.988 | 0.961–1.000 |
 | Precision, "not recommended" | 0.418 | 0.352–0.485 |
 | Rating, quadratic-weighted kappa | 0.752 | 0.708–0.790 |
@@ -243,7 +243,7 @@ or push.
 
 ---
 
-## Session 6 — 2026-10-13
+## Session 6: 2026-10-13
 
 **Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
 **Task given by author:** Add a second local model, prepare Part B, run Part A
@@ -312,7 +312,7 @@ seeing results. No commit or push.
 
 ---
 
-## Session 7 — 2026-10-13
+## Session 7: 2026-10-13
 
 **Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
 **Task given by author:** "Let us proceed to the next part." Given in reply to
@@ -374,7 +374,7 @@ No prompt or codebook changed after seeing results. No commit or push.
 
 ---
 
-## Session 8 — 2026-10-13
+## Session 8: 2026-10-13
 
 **Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
 **Task given by author:** Draft the README and figures.

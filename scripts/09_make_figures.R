@@ -89,7 +89,7 @@ for (m in models) {
   points(r$rating, r$mean_pred, pch = model_pch[m], col = model_col[m], cex = 1.3)
   text(5, r$mean_pred[5], paste0("  ", m), adj = 0, cex = 0.8, col = ink_soft, xpd = TRUE)
 }
-mtext("Part A: both models squeeze ratings towards the middle",
+mtext("Part A: both models under-rate most reviews",
       side = 3, line = 1.8, adj = 0, cex = 1.05, font = 2, col = ink)
 mtext("Below the dashed line = model predicts lower than the reviewer; 80% of reviews are 4-5 stars",
       side = 3, line = 0.6, adj = 0, cex = 0.8, col = ink_soft)
