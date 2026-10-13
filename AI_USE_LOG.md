@@ -1,9 +1,15 @@
 # AI Use Log
 
-This log records every session in which an AI assistant worked on this
-repository: what it was asked to do, what it did, and what the human author
-checked. Sampling, codebook writing and human labelling are done by the
-author, not the AI.
+This log records the sessions in which an AI assistant changed this
+repository: what it was asked to do, what it did, and what the author decided
+or checked. Sessions that left no change in the repository are not recorded.
+
+Division of work: the author set the scope of each step, made the design
+decisions and made every git commit. The AI wrote and ran the code (including
+the sampling scripts, on the author's instructions), drafted the codebook
+definitions, ran the models and drafted the README. No review was labelled by
+a human. Past session entries are kept as written; later corrections are
+recorded in the session that made them.
 
 ---
 
@@ -407,3 +413,85 @@ No prompt or codebook changed after seeing results. No commit or push.
 ### Not done
 
 No new model runs, no analysis changes. No commit or push.
+
+---
+
+## Session 9: 2026-10-13
+
+**Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
+**Task given by author:** Read-only checks of the README; README corrections
+in the author's wording; a full audit of the project; then fix what the audit
+found. Nothing under `prompts/` or `codebook/` was changed.
+
+### README corrections in the author's wording (committed in 843c2f8, 3c032e5)
+
+- Key finding 2: "squeeze ratings towards the middle" replaced with mean
+  signed errors (−0.43 llama3.2:3b, −0.61 gemma3:4b). The old text gave 80%
+  as the share of 3–5-star reviews; the correct figure is 91.6% (80% is the
+  share of 4–5-star reviews).
+- Key finding 3 and results text: the old wording said the social-proof
+  finding "depends on which model did the coding". The two IRRs (0.55 and
+  0.29) point the same way and their CIs overlap; only one reaches p < 0.05.
+  Reworded accordingly.
+- Figure 2 retitled "Part A: both models under-rate most reviews"; regenerated
+  with `09_make_figures.R`, figures 1 and 3 byte-identical.
+- Codebook sentence: "Frozen before the Part B run" replaced with a statement
+  git history supports (definitions identical to `codebook_v0.md`, committed in
+  5f6f1b3 before the Part B outputs in b344c2d).
+- Em dashes in this log's session headings replaced with colons.
+- Session 8 said all README numbers were "re-checked". That check missed the
+  80% error, the overstated social-proof sentence and the rounding errors
+  below.
+
+### Audit (no files changed during the audit)
+
+- Raw file SHA-256 matches session 1. Scripts 00, 01 and 02 re-run in a
+  scratch folder: same counts; `pilot_ids.csv`, `main_ids.csv`,
+  `main_sample.csv` and `pilot_sheet.csv` byte-identical.
+- Scripts 05, 07, 08 and 09 re-run in the repository: every committed output
+  and figure byte-identical.
+- Determinism: 5 reviews (`set.seed(7)` from the sample: ids 13057, 12402,
+  7906, 21042, 9377) re-sent to both models with both prompts and the stored
+  settings. 20 of 20 answers identical to the stored predictions.
+- Prompt hashes inside all four predictions files match the committed prompts.
+  Each prompt and codebook file was added once and never modified.
+- No file under `data/private/` or `data/raw/` has ever been committed. The
+  longest stored model reply is 75 characters (JSON only, no review text).
+- Every README statistic recomputed without intermediate rounding. Four values
+  had been rounded twice (3 decimals in `outputs/`, then 2 in the README).
+- Kaggle page checked: `Positive Feedback Count` is described as "the number
+  of other customers who found this review positive"; licence CC0: Public
+  Domain.
+- Commit 519d629 ("…stop tracking .DS_Store") changed only this log; the
+  `.DS_Store` files remained tracked.
+
+### Fixes made after the audit
+
+- Opening of this log rewritten: it previously said sampling, codebook writing
+  and human labelling were done by the author. The AI wrote and ran the
+  sampling scripts and drafted the codebook, and no human labelling exists.
+- README rounding corrections:
+
+  | Value | Was | Now |
+  |-------|-----|-----|
+  | gemma3:4b precision, "not recommended" | 0.71 | 0.70 (0.7048) |
+  | gemma3:4b expertise IRR | 1.46 | 1.45 (1.4549) |
+  | gemma3:4b social-proof IRR, CI lower bound | 0.33 | 0.32 |
+  | llama3.2:3b log word count IRR, CI lower bound | 1.13 | 1.12 |
+
+  The last three values also appear in the session 7 table above, which is
+  kept as written.
+- README pre-specification text: no longer says the models were fixed before
+  results existed; states that gemma3:4b was added after llama3.2:3b's Part A
+  results, and lists the 3 re-run Part B calls as a deviation.
+- README defines "helpfulness votes" as an interpretation of Kaggle's
+  `Positive Feedback Count`; determinism claim now cites the 20-of-20 check;
+  Reproduce section starts the server before pulling models and asks readers
+  to compare model IDs; dataset licence (CC0) stated.
+- `.gitignore`: added `.DS_Store`. Removing the two tracked `.DS_Store` files
+  from git is left to the author (`git rm --cached`).
+
+### Not done
+
+No model output, analysis script, prompt or codebook changed. No commit or
+push.

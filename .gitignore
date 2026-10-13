@@ -51,3 +51,4 @@ rsconnect/
 .env
 data/raw/
 data/private/
+.DS_Store

@@ -31,9 +31,13 @@ are used in research.
 
 [*Women's E-Commerce Clothing Reviews*](https://www.kaggle.com/datasets/nicapotato/womens-ecommerce-clothing-reviews)
 (Kaggle): 23,486 reviews with title, text, star rating (1–5), whether the
-reviewer recommends the item, and how many other shoppers marked the review
-as helpful. The raw file is not included in this repository; download it from
-Kaggle and place it in `data/raw/` (see *Reproduce*).
+reviewer recommends the item, and `Positive Feedback Count`, which Kaggle
+describes as "the number of other customers who found this review positive".
+This project reads that count as a signal of how helpful other shoppers found
+the review and calls it "helpfulness votes" below; that reading is an
+interpretation, not the dataset's own label. The raw file is not included in
+this repository; download it from Kaggle and place it in `data/raw/` (see
+*Reproduce*).
 
 - Reviews with neither title nor text were dropped (844), leaving 22,642.
 - 30 reviews were set aside for an early pilot and excluded.
@@ -53,16 +57,22 @@ Kaggle and place it in `data/raw/` (see *Reproduce*).
 - **Models:** `llama3.2:3b` (Ollama ID `a80c4f17acd5`) and `gemma3:4b`
   (`68ceab7e468a`), run locally with Ollama 0.34.4.
 - **Settings:** `temperature = 0`, `seed = 42`; replies constrained to a JSON
-  schema. Identical settings give identical output (checked).
+  schema. Identical settings give identical output: re-asking 5 reviews per
+  model and part reproduced 20 of 20 stored answers (see `AI_USE_LOG.md`,
+  session 9).
 - **Prompts:** [`prompts/part_a_v0.txt`](prompts/part_a_v0.txt) and
   [`prompts/part_b_v0.txt`](prompts/part_b_v0.txt). No prompt was changed
   after results were seen.
 - **Codebook:** [`codebook/codebook_v1.md`](codebook/codebook_v1.md), based on
   source credibility (Hovland et al., 1953; Ohanian, 1990), hedging (Lakoff,
   1972; Hyland, 1998) and social proof (Cialdini). The definitions are identical to codebook_v0.md, which was committed before the Part B run, and reached the models through the Part B prompt.
-- **Pre-specification:** metrics and models were written into the evaluation
-  scripts before results existed. One deviation is documented: a cue that a
-  model never codes is left out of that model's regression.
+- **Pre-specification:** each evaluation script's metrics were written before
+  the script was first run on real results, as recorded in `AI_USE_LOG.md`.
+  For Part A the script and its results share one commit, so git alone cannot
+  show the order. The second model, gemma3:4b, was added after llama3.2:3b's
+  Part A results had been seen. Deviations: a cue that a model never codes is
+  left out of that model's regression, and three Part B calls that timed out
+  were re-run with identical settings.
 - **Uncertainty:** 95% percentile bootstrap CIs (2,000 resamples).
 
 ## Results
@@ -74,7 +84,7 @@ Kaggle and place it in `data/raw/` (see *Reproduce*).
 | **Recommendation, Cohen's kappa** | **0.46** (0.39–0.53) | **0.73** (0.65–0.80) |
 | Recommendation accuracy (always "yes" = 0.83) | 0.76 | 0.92 |
 | Recall, "not recommended" | 0.99 | 0.87 |
-| Precision, "not recommended" | 0.42 | 0.71 |
+| Precision, "not recommended" | 0.42 | 0.70 |
 | **Star rating, weighted kappa** | **0.75** (0.71–0.79) | **0.67** (0.62–0.71) |
 | Rating exact / within one star | 0.56 / 0.94 | 0.42 / 0.93 |
 | Spearman's rho | 0.79 | 0.77 |
@@ -104,10 +114,10 @@ with 95% CIs; IRR > 1 means more votes when the cue is present.
 
 | Term | Coded by gemma3:4b | Coded by llama3.2:3b |
 |------|--------------------|----------------------|
-| Expertise claim | 1.46 (0.36–5.83) | not estimable (never coded) |
+| Expertise claim | 1.45 (0.36–5.83) | not estimable (never coded) |
 | Hedging | 0.84 (0.58–1.22) | 0.86 (0.52–1.41) |
-| Social proof | 0.55 (0.33–0.94), p = 0.03 | 0.29 (0.07–1.30), p = 0.11 |
-| Log word count | 1.54 (1.15–2.08) | 1.50 (1.13–1.99) |
+| Social proof | 0.55 (0.32–0.94), p = 0.03 | 0.29 (0.07–1.30), p = 0.11 |
+| Log word count | 1.54 (1.15–2.08) | 1.50 (1.12–1.99) |
 
 Only review length predicts votes consistently. The social-proof estimate reaches p < 0.05 under one model's coding only, and would not survive a correction for six cue tests (Bonferroni threshold 0.008). The two estimates point the same way and their intervals overlap.
 
@@ -128,11 +138,23 @@ Only review length predicts votes consistently. The social-proof estimate reache
 Requirements: R 4.5 with `readr` (2.2.0), `httr2` (1.3.0), `jsonlite` (2.0.0)
 and `MASS` (7.3.65); [Ollama](https://ollama.com) 0.34.4 with the two models.
 
+Start the Ollama server in one terminal and leave it running:
+
+```bash
+ollama serve
+```
+
+In a second terminal, download the models and check their IDs:
+
 ```bash
 ollama pull llama3.2:3b
 ollama pull gemma3:4b
-ollama serve
+ollama list
 ```
+
+The IDs should be `a80c4f17acd5` (llama3.2:3b) and `68ceab7e468a`
+(gemma3:4b). Model tags can be updated over time; a different ID means a
+different model version, and results may differ.
 
 Place `Womens Clothing E-Commerce Reviews.csv` in `data/raw/`, then run from
 the repository root, in order:
@@ -161,6 +183,6 @@ in [`AI_USE_LOG.md`](AI_USE_LOG.md).
 
 ## Licence
 
-Code: MIT (see [`LICENSE`](LICENSE)). The dataset and the models have their
-own terms: see the Kaggle dataset page, the Llama 3.2 Community License and
-the Gemma Terms of Use.
+Code: MIT (see [`LICENSE`](LICENSE)). The dataset is released under CC0:
+Public Domain (per its Kaggle page). The models have their own terms: the
+Llama 3.2 Community License and the Gemma Terms of Use.
