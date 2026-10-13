@@ -371,3 +371,39 @@ approval of v0 as written.
 ### Not done
 
 No prompt or codebook changed after seeing results. No commit or push.
+
+---
+
+## Session 8 — 2026-10-13
+
+**Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
+**Task given by author:** Draft the README and figures.
+
+### What the AI did
+
+- Wrote and ran `scripts/09_make_figures.R` (base R graphics): three PNGs in
+  `outputs/figures/` (Part A agreement with CIs; Part A mean predicted vs.
+  true rating; Part B cue prevalence per model with kappa) and
+  `outputs/part_a_calibration.csv` (averages per rating level only). Model
+  colours from a colourblind-checked reference palette; each model also has
+  its own marker shape and direct label. The palette validator could not be
+  run (Node.js not installed). All figures were rendered and inspected.
+- Wrote `README.md`: question, key findings, data, design, results tables,
+  limitations, how to reproduce, AI assistance statement, licences. All
+  numbers were taken from the files in `outputs/` and re-checked; the 3-star
+  recommendation figure (22 of 60) and zero-vote share (46.2%) were verified
+  against the sample.
+
+### Correction to earlier entries
+
+- Sessions 5 and 6 stated that the models under-predict ratings "at every
+  level". That is wrong. Figure 2 shows that for 1-star reviews both models
+  predict higher than the reviewer (llama 1.60, gemma 1.80), and gemma is
+  exact on average for 2-star reviews (2.00). Predictions are compressed
+  towards the middle: too low for 3–5 stars (79.6% of the sample is 4–5
+  stars), too high for 1 star (n = 10). The README uses the corrected
+  description.
+
+### Not done
+
+No new model runs, no analysis changes. No commit or push.
