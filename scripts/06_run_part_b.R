@@ -1,7 +1,7 @@
 # 06_run_part_b.R
 # Part B: codes three trust cues (expertise_claim, hedging, social_proof) in
 # each sampled review with the local model, using prompts/part_b_v0.txt, which
-# follows codebook/codebook_v1.md (frozen).
+# was written from the definitions in codebook/codebook_v0.md (unchanged in v1).
 #
 # Usage, from the repository root:
 #   Rscript scripts/06_run_part_b.R <model> --test   first 5 reviews, prints only

@@ -4,14 +4,17 @@
 reliably?** This project tests two open models on 500 clothing reviews in two
 ways: against labels the reviewers gave themselves, and against each other on
 three trust cues (expertise claims, hedging, social proof). Everything runs on
-an 8 GB laptop, at no cost, in R.
+an 8 GB laptop at no cost: the models run locally through Ollama, and all
+sampling, model calls and analysis are scripted in R.
 
 ## Key findings
 
-1. **Overall opinion is captured reasonably well, but how well depends on the
-   task.** Agreement with reviewers' own labels ranged from kappa 0.46 to 0.75.
-   Neither model was better at both tasks: gemma3:4b was clearly better at
-   predicting recommendations, llama3.2:3b slightly better at star ratings.
+1. **How well overall opinion is captured depends on the task and the
+   model.** Agreement with reviewers' own labels ranged from kappa 0.46 to
+   0.75. Neither model was better at both tasks: gemma3:4b was clearly better
+   at predicting recommendations, llama3.2:3b slightly better at star ratings.
+   llama3.2:3b's recommendation accuracy (0.76) was below the 0.83 obtained by
+   always answering "recommends".
 2. **Both models under-rated reviews on average.** The mean predicted minus actual rating was -0.43 (llama3.2:3b) and -0.61 (gemma3:4b). The shift was downward for 3 to 5 star reviews (91.6% of the sample), near zero or slightly low for 2 star reviews, and upward only for the 10 one-star reviews, too few to interpret. The models therefore read most reviews as more negative than their authors meant.
 3. **On subtler concepts the models disagree.** Given the same codebook and
    prompt, the two models agreed only weakly on trust cues (kappa 0.00–0.30),
@@ -65,7 +68,7 @@ this repository; download it from Kaggle and place it in `data/raw/` (see
   after results were seen.
 - **Codebook:** [`codebook/codebook_v1.md`](codebook/codebook_v1.md), based on
   source credibility (Hovland et al., 1953; Ohanian, 1990), hedging (Lakoff,
-  1972; Hyland, 1998) and social proof (Cialdini). The definitions are identical to codebook_v0.md, which was committed before the Part B run, and reached the models through the Part B prompt.
+  1972; Hyland, 1998) and social proof (Cialdini, 1984). The definitions are identical to codebook_v0.md, which was committed before the Part B run, and reached the models through the Part B prompt.
 - **Pre-specification:** each evaluation script's metrics were written before
   the script was first run on real results, as recorded in `AI_USE_LOG.md`.
   For Part A the script and its results share one commit, so git alone cannot

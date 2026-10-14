@@ -495,3 +495,37 @@ found. Nothing under `prompts/` or `codebook/` was changed.
 
 No model output, analysis script, prompt or codebook changed. No commit or
 push.
+
+---
+
+## Session 10: 2026-10-14
+
+**Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
+**Task given by author:** Fix the remaining minor audit findings, including
+ones the author had earlier ruled out, where the AI judged a fix necessary.
+
+### What the AI did
+
+- README Key finding 1: "Overall opinion is captured reasonably well" replaced
+  with "How well overall opinion is captured depends on the task and the
+  model", and adds that llama3.2:3b's recommendation accuracy (0.76) was below
+  the always-"recommends" baseline (0.83).
+- README introduction: "Everything runs … in R" now says the models run
+  locally through Ollama and the sampling, model calls and analysis are
+  scripted in R.
+- README: Cialdini citation given a year (1984, first edition of *Influence*).
+- `scripts/09_make_figures.R` comment: palette described as "documented as
+  colourblind-safe (its validator was not run for this project)" instead of
+  "colourblind-checked". Figures re-generated: byte-identical.
+- `scripts/06_run_part_b.R` comment: now says the prompt was written from the
+  definitions in `codebook_v0.md` (unchanged in v1), instead of "follows
+  codebook_v1.md (frozen)". Comment only; the script parses unchanged.
+- Codebook files not edited: `codebook_v1.md` requires any change to be a new
+  version, and the Part B outputs were produced from these exact files. Their
+  Cialdini reference still has no year or publisher.
+- Noted that the two `.DS_Store` files were still tracked after 83315b8;
+  `git rm --cached` is left to the author.
+
+### Not done
+
+No model run, no output, prompt or codebook changed. No commit or push.

@@ -11,8 +11,8 @@ fig_dir <- file.path("outputs", "figures")
 dir.create(fig_dir, showWarnings = FALSE, recursive = TRUE)
 
 # Style -------------------------------------------------------------------------
-# Model colours: categorical slots 1-2 of a colourblind-checked reference
-# palette. Each model also has its own marker shape and a direct label, so
+# Model colours: categorical slots 1-2 of a reference palette documented as
+# colourblind-safe (its validator was not run for this project). Each model also has its own marker shape and a direct label, so
 # identity never depends on colour alone.
 models     <- c("llama3.2:3b", "gemma3:4b")
 model_col  <- c("llama3.2:3b" = "#2a78d6", "gemma3:4b" = "#eb6834")
