@@ -180,9 +180,7 @@ statistics only.
 
 ## AI assistance
 
-This project was built with help from an AI coding assistant (Claude Code).
-What the AI did and what the author decided is documented session by session
-in [`AI_USE_LOG.md`](AI_USE_LOG.md).
+Built with Claude Code. I set the scope and design (free local models, the construct, no hand coding) and approved each step and every commit. The AI wrote and ran the code and drafted the README and codebook text. AI_USE_LOG.md records each session. No review was labelled by a human, so the trust-cue results compare two models with each other and are not validated against human coding.
 
 ## Licence
 

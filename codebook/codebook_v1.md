@@ -1,17 +1,12 @@
 # Trust-Cue Codebook — v1 (frozen)
 
 **Status:** Frozen on 2026-10-13, before the full Part B run. Any later change
-must be saved as a new version and logged in `AI_USE_LOG.md`.
+must be saved as a new version and logged in `AI_USE_LOG.md`. Provenance wording revised on 2026-10-17 (definitions unchanged; see `AI_USE_LOG.md`, session 11).
 
 **Changes from v0:** none to the definitions. Decisions D1–D3 confirmed as
-written (author's reply to the approval request: "Let us proceed to the next
-part"). Implemented in `prompts/part_b_v0.txt`.
+written (go-ahead given by the author; see AI_USE_LOG.md, session 7). Implemented in `prompts/part_b_v0.txt`.
 
-**Provenance:** Definitions drafted by an AI assistant (Claude) at the author's
-request on 2026-10-12, based on the sources cited below; the three decisions
-were set to the AI's suggested defaults on 2026-10-13 and confirmed by the
-author the same day. See `AI_USE_LOG.md`, sessions 3, 6 and 7. All examples
-are invented, not taken from the dataset.
+**Provenance:** Prepared at the author's request on 2026-10-12 with an AI assistant (Claude), from the sources cited below. The author chose the construct and accepted the three cues and decisions D1 to D3 (2026-10-13). See `AI_USE_LOG.md`, sessions 3, 6 and 7. All examples are invented, not taken from the dataset.
 
 ---
 

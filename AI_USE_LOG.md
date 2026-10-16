@@ -321,7 +321,7 @@ seeing results. No commit or push.
 ## Session 7: 2026-10-13
 
 **Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
-**Task given by author:** "Let us proceed to the next part." Given in reply to
+**Task given by author:** A general go-ahead, given in reply to
 the request to approve codebook decisions D1–D3; the AI treated it as
 approval of v0 as written.
 
@@ -529,3 +529,15 @@ ones the author had earlier ruled out, where the AI judged a fix necessary.
 ### Not done
 
 No model run, no output, prompt or codebook changed. No commit or push.
+
+## Session 11: 2026-10-17
+
+### Environment
+- No R code was run this session.
+
+### AI actions
+- Replaced the AI assistance section of README.md and reworded two parts of the provenance in codebook/codebook_v1.md, on the author's instruction. No definition, prompt, script or output changed.
+- Replaced a verbatim quotation of the author's reply in session 7 with a paraphrase of the same fact, and added one sentence to the status line of codebook/codebook_v1.md.
+
+### Checks
+- git diff showed only README.md, codebook/codebook_v1.md and AI_USE_LOG.md changed. Sections 1 to 3 and the references of codebook_v1.md are unchanged.
