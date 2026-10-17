@@ -2,8 +2,7 @@
 
 **Can small, free, locally run language models annotate consumer reviews
 reliably?** This project tests two open models on 500 clothing reviews in two
-ways: against labels the reviewers gave themselves, and against each other on
-three trust cues (expertise claims, hedging, social proof). Everything runs on
+ways: against labels the reviewers gave themselves, and, on three trust cues (expertise claims, hedging, social proof), against each other and against my own labels for 100 of the reviews. Everything runs on
 an 8 GB laptop at no cost: the models run locally through Ollama, and all
 sampling, model calls and analysis are scripted in R.
 
@@ -18,7 +17,7 @@ sampling, model calls and analysis are scripted in R.
 2. **Both models under-rated reviews on average.** The mean predicted minus actual rating was -0.43 (llama3.2:3b) and -0.61 (gemma3:4b). The shift was downward for 3 to 5 star reviews (91.6% of the sample), near zero or slightly low for 2 star reviews, and upward only for the 10 one-star reviews, too few to interpret. The models therefore read most reviews as more negative than their authors meant.
 3. **On subtler concepts the models disagree.** Given the same codebook and
    prompt, the two models agreed only weakly on trust cues (kappa 0.00–0.30),
-   and one coded social proof seven times as often as the other. Social proof was associated with fewer helpfulness votes under both models' coding (IRR 0.55 and 0.29), but the confidence intervals overlap widely, the llama3.2:3b estimate rests on only 7 coded reviews, and only the gemma3:4b estimate reaches p < 0.05, which does not survive correction for six tests.
+   and one coded social proof seven times as often as the other. Social proof was associated with fewer helpfulness votes under both models' coding (IRR 0.55 and 0.29), but the confidence intervals overlap widely, the llama3.2:3b estimate rests on only 7 coded reviews, and only the gemma3:4b estimate reaches p < 0.05, which does not survive correction for six tests. Against my own labels on 100 reviews, gemma3:4b agreed more than llama3.2:3b on social proof (kappa 0.50 against 0.08), and llama3.2:3b coded social proof in 1.4% of reviews against my weighted estimate of 14.8%.
 
 The practical lesson: LLM annotations should be validated for each task and
 each concept, and substantive conclusions checked across models, before they
@@ -124,10 +123,24 @@ with 95% CIs; IRR > 1 means more votes when the cue is present.
 
 Only review length predicts votes consistently. The social-proof estimate reaches p < 0.05 under one model's coding only, and would not survive a correction for six cue tests (Bonferroni threshold 0.008). The two estimates point the same way and their intervals overlap.
 
+## Human comparison
+
+I labelled 100 of the 500 reviews for the three cues. The 100 are every review either model coded as expertise_claim (6), 34 of the other 50 coded as social_proof, and 60 of the 444 coded as neither, shuffled, in a sheet that showed no model output. My labels were committed and pushed (d3b65d3) before the comparison script existed. The script and its results share a commit, so git alone does not show the order of those two. Estimates for all 500 reviews weight each reviewed review by 1 / inclusion probability. Intervals are 95% percentile bootstraps (2,000 resamples within each of the three groups).
+
+| Cue | My rate (weighted) | gemma3:4b rate / kappa with me | llama3.2:3b rate / kappa with me |
+|---|---|---|---|
+| Hedging | 15.0% (7.9 to 23.4) | 26.6% / 0.45 (0.18 to 0.68) | 12.6% / 0.29 (-0.07 to 0.58) |
+| Social proof | 14.8% (9.0 to 21.4) | 10.2% / 0.50 (0.32 to 0.72) | 1.4% / 0.08 (-0.01 to 0.22) |
+| Expertise claim | 0.7% (0.0 to 1.5) | 1.2% / counts only | 0.0% / counts only |
+
+- Social proof: sensitivity against my labels was 0.47 (0.31 to 0.79) for gemma3:4b and 0.06 (0.00 to 0.15) for llama3.2:3b; specificity was 0.96 and 0.99. I labelled 24 of the 35 sampled reviews gemma3:4b flagged, and 3 of the 5 llama3.2:3b flagged. I labelled 5 of the 60 reviews neither model flagged, which the weights scale to about 37 of 444.
+- Hedging: gemma3:4b codes more than I do (26.6% against my 15.0%) and catches most of my cases (sensitivity 0.70); llama3.2:3b codes about as often as I do but agrees less (sensitivity 0.30). The intervals for the two models overlap.
+- Expertise claim: I labelled 3 reviews. Of gemma3:4b's 6 flags I agreed with 2; llama3.2:3b flagged none. Too rare to estimate.
+- The comparison between the two models is descriptive. No paired test was planned.
+
 ## Limitations
 
-- **No human coding of trust cues.** Part B shows that the models disagree,
-  not which one is right.
+- **Single-coder reference.** I labelled 100 reviews myself, so the figures above are agreement with one coder (the author, who also accepted the codebook decisions), not ground truth. The sheet showed no model output, but I knew some reviews had been selected because a model flagged them, and I marked no review as uncertain. Each unflagged review stands for about 7 reviews, so a few labels move the estimates and the intervals are wide.
 - **Reviewers' labels are an imperfect benchmark.** 22 of the 60 3-star
   reviewers still recommend the item; no reader could reach perfect agreement.
 - **Rare cues.** Expertise claims are too rare in 500 reviews to analyse.
@@ -180,7 +193,7 @@ statistics only.
 
 ## AI assistance
 
-Built with Claude Code. I set the scope and design (free local models, the construct, no hand coding) and approved each step and every commit. The AI wrote and ran the code and drafted the README and codebook text. AI_USE_LOG.md records each session. No review was labelled by a human, so the trust-cue results compare two models with each other and are not validated against human coding.
+Built with Claude Code. I set the scope and design (free local models, the construct, and later hand coding of 100 reviews) and approved each step and every commit. The AI wrote and ran the code and drafted the README and codebook text. AI_USE_LOG.md records each session. I labelled 100 of the 500 reviews myself (see Human comparison above); the other 400 are coded only by the models.
 
 ## Licence
 

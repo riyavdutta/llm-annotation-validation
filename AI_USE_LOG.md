@@ -4,11 +4,10 @@ This log records the sessions in which an AI assistant changed this
 repository: what it was asked to do, what it did, and what the author decided
 or checked. Sessions that left no change in the repository are not recorded.
 
-Division of work: the author set the scope of each step, made the design
-decisions and made every git commit. The AI wrote and ran the code (including
+Division of work: the author set the scope of each step and made the design
+decisions. The AI wrote and ran the code (including
 the sampling scripts, on the author's instructions), drafted the codebook
-definitions, ran the models and drafted the README. No review was labelled by
-a human. Past session entries are kept as written; later corrections are
+definitions, ran the models and drafted the README. The author labelled 100 reviews by hand (session 12); no other review was labelled by a human. Past session entries are kept as written; later corrections are
 recorded in the session that made them.
 
 ---
@@ -541,3 +540,19 @@ No model run, no output, prompt or codebook changed. No commit or push.
 
 ### Checks
 - git diff showed only README.md, codebook/codebook_v1.md and AI_USE_LOG.md changed. Sections 1 to 3 and the references of codebook_v1.md are unchanged.
+
+## Session 12: 2026-10-18
+
+**Tool:** Claude Code (desktop app), model Claude Opus 5.5 (`claude-opus-5-5`)
+**Task given by author:** Build a blind sheet of 100 reviews for hand coding, export the author's labels, and compare them with the models' Part B codings.
+
+### What the AI did
+
+- Wrote and ran `scripts/10_make_human_sheet.R` (set.seed(31)): 100 reviews, namely all 6 coded expertise_claim by either model, 34 of the other 50 coded social_proof and 60 of 444 coded neither, shuffled. It wrote `data/private/human_coding_sheet.csv` (review text and empty columns, no model output) and `data/private/human_sample_strata.csv` (source, pool size, inclusion probability). Both are git-ignored.
+- The author entered every label by hand. With one-off commands, not a saved script, the AI checked the file (100 rows, ids matching the strata file, every cue cell 0 or 1, sheet text identical to the sample) and wrote `data/human_labels.csv` (no review text), committed as d3b65d3 and pushed before any comparison.
+- Wrote `scripts/12_compare_human_labels.R`, dry-ran it on fake random labels in a scratch folder (no errors, no NaN, values in range), then ran it once on the real labels. It wrote `outputs/human_comparison.csv` (47 rows of statistics, no text or ids).
+
+### Checks
+
+- Labels were committed and pushed before the comparison script existed. The script and its results share one commit.
+- The comparison is single-coder and descriptive; no paired test was planned. Results are in the README section "Human comparison".
